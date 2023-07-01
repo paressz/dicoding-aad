@@ -21,7 +21,7 @@ import com.dicoding.todoapp.utils.TASK_ID
 class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
 
     private val channelName = inputData.getString(NOTIFICATION_CHANNEL_ID)
-    val taskRepository = TaskRepository.getInstance(ctx)
+    private val taskRepository = TaskRepository.getInstance(ctx)
 
     private fun getPendingIntent(task: Task): PendingIntent? {
         val intent = Intent(applicationContext, DetailTaskActivity::class.java).apply {

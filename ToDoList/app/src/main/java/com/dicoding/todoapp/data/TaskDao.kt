@@ -12,7 +12,7 @@ interface TaskDao {
     fun getTasks(query: SupportSQLiteQuery): DataSource.Factory<Int, Task>
     @Query("SELECT * FROM tasks WHERE id = :taskId")
     fun getTaskById(taskId: Int): LiveData<Task>
-    @Query("SELECT * FROM tasks ORDER BY dueDate DESC")
+    @Query("SELECT * FROM tasks ORDER BY dueDate ASC")
     fun getNearestActiveTask(): Task
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTask(task: Task): Long
