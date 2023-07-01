@@ -1,25 +1,33 @@
 package com.dicoding.todoapp.ui.add
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.dicoding.todoapp.R
+import com.dicoding.todoapp.data.Task
+import com.dicoding.todoapp.ui.ViewModelFactory
+import com.dicoding.todoapp.ui.list.TaskActivity
 import com.dicoding.todoapp.utils.DatePickerFragment
+import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.*
 
 class AddTaskActivity : AppCompatActivity(), DatePickerFragment.DialogDateListener {
     private var dueDateMillis: Long = System.currentTimeMillis()
-
+    private lateinit var addTaskViewModel : AddTaskViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)
 
         supportActionBar?.title = getString(R.string.add_task)
 
+        val factory = ViewModelFactory.getInstance(this)
+        addTaskViewModel = ViewModelProvider(this, factory)[AddTaskViewModel::class.java]
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -31,6 +39,18 @@ class AddTaskActivity : AppCompatActivity(), DatePickerFragment.DialogDateListen
         return when (item.itemId) {
             R.id.action_save -> {
                 //TODO 12 : Create AddTaskViewModel and insert new task to database
+                val title = findViewById<TextInputEditText>(R.id.add_ed_title).text.toString()
+                val desc = findViewById<TextInputEditText>(R.id.add_ed_description).text.toString()
+                addTaskViewModel.insertTask(
+                    Task(
+                        title = title,
+                        description = desc,
+                        dueDateMillis = dueDateMillis
+                    )
+                )
+                val intent = Intent(this, TaskActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)
