@@ -13,23 +13,18 @@ import com.dicoding.todoapp.utils.TASK_ID
 import com.google.android.material.textfield.TextInputEditText
 
 class DetailTaskActivity : AppCompatActivity() {
-    private lateinit var edTitle : TextInputEditText
-    private lateinit var edDesc : TextInputEditText
-    private lateinit var edDueDate : TextInputEditText
-    private lateinit var button: Button
-    private lateinit var viewModel: DetailTaskViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_detail)
 
         //TODO 11 : Show detail task and implement delete action
-        viewModel = ViewModelProvider(this, ViewModelFactory.getInstance(this))[DetailTaskViewModel::class.java]
+        val viewModel = ViewModelProvider(this, ViewModelFactory.getInstance(this))[DetailTaskViewModel::class.java]
         val taskId = intent.getIntExtra(TASK_ID, 0)
         viewModel.setTaskId(taskId)
-        edTitle = findViewById(R.id.detail_ed_title)
-        edDesc = findViewById(R.id.detail_ed_description)
-        edDueDate = findViewById(R.id.detail_ed_due_date)
-        button = findViewById(R.id.btn_delete_task)
+        val edTitle = findViewById<TextInputEditText>(R.id.detail_ed_title)
+        val edDesc = findViewById<TextInputEditText>(R.id.detail_ed_description)
+        val edDueDate = findViewById<TextInputEditText>(R.id.detail_ed_due_date)
+        val button = findViewById<Button>(R.id.btn_delete_task)
         viewModel.task.observe(this) {task ->
             edTitle.apply {
                 if (text.isNullOrEmpty()) {
