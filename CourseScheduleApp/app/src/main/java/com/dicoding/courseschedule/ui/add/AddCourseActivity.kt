@@ -50,30 +50,39 @@ class AddCourseActivity : AppCompatActivity(), TimePickerFragment.DialogTimeList
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.action_insert) {
-
-            val name = edCourseName.text.toString()
-            val lecturer = edLecturer.text.toString()
-            val note = edNote.text.toString()
-            val start = tvStart.text.toString()
-            val end = tvEnd.text.toString()
-            val day = dayOW.selectedItemPosition
-            if (!(name.isEmpty()||lecturer.isEmpty()||note.isEmpty()||start.isEmpty()||end.isEmpty())) {
-                viewModel.insertCourse(
-                    courseName = name,
-                    lecturer = lecturer,
-                    note = note,
-                    day = day,
-                    startTime = start,
-                    endTime = end,
-                )
-                finish()
-            } else {
-                Toast.makeText(this, "Some Fields Are Empty!", Toast.LENGTH_SHORT).show()
+        when (item.itemId) {
+            R.id.action_insert -> {
+                val name = edCourseName.text.toString()
+                val lecturer = edLecturer.text.toString()
+                val note = edNote.text.toString()
+                val start = tvStart.text.toString()
+                val end = tvEnd.text.toString()
+                val day = dayOW.selectedItemPosition
+                if (name.isNotEmpty() && start.isNotEmpty() && end.isNotEmpty()) {
+                    viewModel.insertCourse(
+                        courseName = name,
+                        lecturer = lecturer,
+                        note = note,
+                        day = day,
+                        startTime = start,
+                        endTime = end,
+                    )
+                } else {
+                    Toast.makeText(this, "course name, start time, and end time can't be empty", Toast.LENGTH_SHORT ).show()
+                }
+                viewModel.saved.observe(this) {
+                    if (it.getContentIfNotHandled() == true) {
+                        finish()
+                    }
+                }
+                return true
             }
-            true
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
         }
-        else super.onOptionsItemSelected(item)
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initComponents() {
