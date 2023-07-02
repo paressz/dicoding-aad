@@ -22,7 +22,7 @@ interface CourseDao {
     @Query("SELECT * FROM course WHERE id = :id")
     fun getCourse(id: Int): LiveData<Course>
 
-    @Query("SELECT * FROM course WHERE startTime = :day ORDER BY endTime ASC")
+    @Query("SELECT * FROM course WHERE day = :day ORDER BY startTime ASC")
     fun getTodaySchedule(day: Int): List<Course>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
