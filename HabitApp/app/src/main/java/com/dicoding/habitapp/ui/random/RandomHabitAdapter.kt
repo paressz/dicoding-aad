@@ -1,11 +1,18 @@
 package com.dicoding.habitapp.ui.random
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.habitapp.R
 import com.dicoding.habitapp.data.Habit
+import com.dicoding.habitapp.ui.detail.DetailHabitActivity
+import com.dicoding.habitapp.utils.HABIT
+import com.dicoding.habitapp.utils.HABIT_ID
 
 class RandomHabitAdapter(
     private val onClick: (Habit) -> Unit
@@ -41,7 +48,21 @@ class RandomHabitAdapter(
         //TODO 14 : Create view and bind data to item view
 
         fun bind(pageType: PageType, pageData: Habit) {
-
+            itemView.apply {
+                findViewById<TextView>(R.id.pager_tv_title).text = pageData.title
+                findViewById<TextView>(R.id.pager_tv_start_time).text = pageData.startTime
+                findViewById<TextView>(R.id.pager_tv_minutes).text = pageData.minutesFocus.toString()
+                findViewById<Button>(R.id.pager_btn_open_count_down).setOnClickListener {
+                    onClick(pageData)
+                }
+                findViewById<ImageView>(R.id.item_priority_level).setImageResource(
+                    when (pageType) {
+                        PageType.HIGH -> R.drawable.ic_priority_high
+                        PageType.MEDIUM -> R.drawable.ic_priority_medium
+                        PageType.LOW -> R.drawable.ic_priority_low
+                    }
+                )
+            }
         }
     }
 }

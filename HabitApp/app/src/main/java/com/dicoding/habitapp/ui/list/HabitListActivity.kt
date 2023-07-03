@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.habitapp.R
 import com.dicoding.habitapp.data.Habit
+import com.dicoding.habitapp.setting.SettingsActivity
 import com.dicoding.habitapp.ui.ViewModelFactory
 import com.dicoding.habitapp.ui.add.AddHabitActivity
 import com.dicoding.habitapp.ui.detail.DetailHabitActivity
@@ -41,10 +42,6 @@ class HabitListActivity : AppCompatActivity() {
 
         //TODO 6 : Initiate RecyclerView with LayoutManager
         recycler = findViewById(R.id.rv_habit)
-        recycler.apply {
-            layoutManager = GridLayoutManager(this@HabitListActivity, 2)
-            setHasFixedSize(true)
-        }
 
         initAction()
 
@@ -60,6 +57,10 @@ class HabitListActivity : AppCompatActivity() {
             }
             adapter.submitList(it)
             recycler.adapter = adapter
+            recycler.apply {
+                layoutManager = GridLayoutManager(this@HabitListActivity, 2)
+                setHasFixedSize(true)
+            }
         }
 
         viewModel.snackbarText.observe(this) {
@@ -87,7 +88,7 @@ class HabitListActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_filter -> showFilteringPopUpMenu()
-            R.id.action_settings -> Snackbar.make(findViewById(R.id.coordinator_layout), "NOT YET IMPLEMENTED", Snackbar.LENGTH_SHORT).show()
+            R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java))
             R.id.action_random -> startActivity(Intent(this, RandomHabitActivity::class.java))
         }
         return true
