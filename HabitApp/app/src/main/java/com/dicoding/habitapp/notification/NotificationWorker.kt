@@ -33,6 +33,8 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
         val notif = notification(pendingIntent)
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_HIGH)
+            channel.description = channelName
+            notif.setChannelId(NOTIFICATION_CHANNEL_ID)
             notificationManager.createNotificationChannel(channel)
         }
         if (shouldNotify) {

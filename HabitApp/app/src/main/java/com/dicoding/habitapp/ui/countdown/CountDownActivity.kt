@@ -30,7 +30,14 @@ class CountDownActivity : AppCompatActivity() {
 
         //TODO 10 : Set initial time and observe current time. Update button state when countdown is finished
         val workManager = WorkManager.getInstance(this)
-        val workReq = oneTimeWorkRequest(habit, habit.minutesFocus)
+        val data = Data.Builder()
+            .putInt(HABIT_ID, habit.id)
+            .putString(HABIT_TITLE, habit.title)
+            .build()
+        val workReq = OneTimeWorkRequestBuilder<NotificationWorker>()
+            .setInputData(data)
+            .setInitialDelay(habit.minutesFocus, TimeUnit.MINUTES)
+            .build()
         viewModel.setInitialTime(habit.minutesFocus)
         viewModel.currentTimeString.observe(this) {
             findViewById<TextView>(R.id.tv_count_down).text = it
@@ -42,8 +49,8 @@ class CountDownActivity : AppCompatActivity() {
         //TODO 13 : Start and cancel One Time Request WorkManager to notify when time is up.
 
         findViewById<Button>(R.id.btn_start).setOnClickListener {
-            viewModel.startTimer()
             workManager.enqueueUniqueWork(NOTIF_UNIQUE_WORK, ExistingWorkPolicy.REPLACE, workReq)
+            viewModel.startTimer()
             updateButtonState(true)
         }
 
@@ -61,14 +68,4 @@ class CountDownActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_stop).isEnabled = isRunning
     }
 
-    private fun oneTimeWorkRequest(habit: Habit, duration : Long): OneTimeWorkRequest {
-        val data = Data.Builder()
-            .putInt(HABIT_ID, habit.id)
-            .putString(HABIT_TITLE, habit.title)
-            .build()
-        return OneTimeWorkRequestBuilder<NotificationWorker>()
-            .setInputData(data)
-            .setInitialDelay(duration, TimeUnit.MINUTES)
-            .build()
-    }
 }
