@@ -1,5 +1,6 @@
 package com.dicoding.habitapp.ui.list
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -16,11 +17,21 @@ class HabitAdapter(
 
     //TODO 8 : Create and initialize ViewHolder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
+        return HabitViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.habit_item, parent, false))
         throw NotImplementedError("Not yet implemented")
     }
 
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
         //TODO 9 : Get data and bind them to ViewHolder
+        val habit = getItem(position) as Habit
+        holder.bind(habit)
+        holder.ivPriority.setImageResource(
+            when (habit.priorityLevel) {
+                "High" -> R.drawable.ic_priority_high
+                "Medium" -> R.drawable.ic_priority_medium
+                else -> R.drawable.ic_priority_low
+            }
+        )
     }
 
     inner class HabitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

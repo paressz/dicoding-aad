@@ -8,13 +8,18 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.habitapp.R
 import com.dicoding.habitapp.data.Habit
 import com.dicoding.habitapp.ui.ViewModelFactory
 import com.dicoding.habitapp.ui.add.AddHabitActivity
+import com.dicoding.habitapp.ui.detail.DetailHabitActivity
+import com.dicoding.habitapp.ui.random.RandomHabitActivity
 import com.dicoding.habitapp.utils.Event
+import com.dicoding.habitapp.utils.HABIT_ID
 import com.dicoding.habitapp.utils.HabitSortType
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -35,6 +40,11 @@ class HabitListActivity : AppCompatActivity() {
         }
 
         //TODO 6 : Initiate RecyclerView with LayoutManager
+        recycler = findViewById(R.id.rv_habit)
+        recycler.apply {
+            layoutManager = GridLayoutManager(this@HabitListActivity, 2)
+            setHasFixedSize(true)
+        }
 
         initAction()
 
@@ -42,6 +52,19 @@ class HabitListActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, factory).get(HabitListViewModel::class.java)
 
         //TODO 7 : Submit pagedList to adapter and add intent to detail
+        viewModel.habits.observe(this) {
+            val adapter = HabitAdapter { habit ->
+                val intent = Intent(this, DetailHabitActivity::class.java)
+                    .putExtra(HABIT_ID, habit.id)
+                startActivity(intent)
+            }
+            adapter.submitList(it)
+            recycler.adapter = adapter
+        }
+
+        viewModel.snackbarText.observe(this) {
+            showSnackBar(it)
+        }
     }
 
     //TODO 15 : Fixing bug : Menu not show and SnackBar not show when list is deleted using swipe
@@ -57,10 +80,16 @@ class HabitListActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_filter -> showFilteringPopUpMenu()
+            R.id.action_settings -> Snackbar.make(findViewById(R.id.coordinator_layout), "NOT YET IMPLEMENTED", Snackbar.LENGTH_SHORT).show()
+            R.id.action_random -> startActivity(Intent(this, RandomHabitActivity::class.java))
+        }
         return true
     }
 
