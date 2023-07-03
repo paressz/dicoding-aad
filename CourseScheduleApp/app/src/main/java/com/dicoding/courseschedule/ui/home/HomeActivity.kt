@@ -2,7 +2,6 @@ package com.dicoding.courseschedule.ui.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
