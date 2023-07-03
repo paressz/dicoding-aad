@@ -41,7 +41,7 @@ class DailyReminder : BroadcastReceiver() {
         cal.set(Calendar.MINUTE, 0)
 
         val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.getBroadcast(context, ID_REPEATING, notifIntent, PendingIntent.FLAG_IMMUTABLE)
+            PendingIntent.getBroadcast(context, ID_REPEATING, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         } else {
             PendingIntent.getBroadcast(context, ID_REPEATING, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
